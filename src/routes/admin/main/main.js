@@ -1,3 +1,20 @@
+/**
+ * Админское редактирование **слайдов главной страницы** (таблица `slides`).
+ *
+ * @module routes/admin/main
+ *
+ * @description
+ *
+ * Префикс **`/api/v1/admin/main`**, JWT.
+ *
+ * | Метод | Путь | Назначение |
+ * |-------|------|------------|
+ * | GET | `/main` | Все слайды; **404**, если таблица пуста |
+ * | PUT | `/update` | Полная перезапись набора слайдов: транзакция `BEGIN` → `DELETE FROM slides` → вставка из `existingSlides` и `newSlides` (JSON-строки массивов в body) + загрузка новых картинок (`upload.array`, до 20 файлов); порядок задаётся `slide_order` |
+ *
+ * Новые локальные URL формируются с префиксом **`https://api.korni.pro/uploads/`** по аналогии с другими админ-модулями.
+ */
+
 const express = require('express');
 const router = express.Router();
 const { query } = require('../../../db/db');

@@ -1,3 +1,26 @@
+/**
+ * Админский **CRUD проектов**: загрузка обложки, галерей и планов (`multer` → `uploads/`), URL файлов с префиксом публичного API.
+ *
+ * @module routes/admin/projects
+ *
+ * @description
+ *
+ * Префикс **`/api/v1/admin/projects`**, JWT обязателен.
+ *
+ * Файлы сохраняются в каталог **`uploads/`**; в БД пишутся абсолютные URL вида **`https://api.korni.pro/uploads/&lt;filename&gt;`** (`API_URL_PREFIX`). Раздача с диска — через `{@link module:server}` (`/uploads`).
+ *
+ * | Метод | Путь | Назначение |
+ * |-------|------|------------|
+ * | GET | `/:id` | Одна запись `public.projects` |
+ * | GET | `/` | Все проекты, сортировка `priority ASC` |
+ * | POST | `/create` | Создание; **multipart**: поля `cover` (1), `images` (до 20), `plans` (до 20); тело текста — метаданные (`name`, `cost`, `square`, …). Обязательна обложка. Приоритет авто. |
+ * | PATCH | `/:id/priority` | Смена `priority` с обменом при конфликте (как в справочниках) |
+ * | PUT | `/update/:id` | Обновление; те же поля файлов + `existingCover`, `existingImages`, `existingPlans` (JSON-массивы URL). Удаляет с диска файлы, выпавшие из набора. |
+ * | DELETE | `/delete/:id` | Удаление записи; с диска снимаются **images** и **plans** (не cover в текущей реализации — проверьте при доработке) |
+ *
+ * Схема БД: **`public.projects`**. Успешное создание: **201**; типичные ошибки **400**, **404**, **500**.
+ */
+
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');

@@ -1,3 +1,39 @@
+/**
+ * Сборка всех HTTP-маршрутов API версии **v1**.
+ *
+ * @module routes/index
+ *
+ * @description
+ *
+ * ## Где монтируется
+ *
+ * В `{@link module:server}` роутер подключается как `app.use('/api/v1', routes)`, поэтому все пути ниже — **дополнение** к `/api/v1`.
+ *
+ * ## Публичные сегменты (без JWT)
+ *
+ * | Mount | Модуль | Комментарий |
+ * |-------|--------|-------------|
+ * | `/projects` | `{@link module:routes/projects}` | Каталог проектов, типы |
+ * | `/contacts` | `{@link module:routes/contacts}` | Заявки с сайта |
+ * | `/main` | `{@link module:routes/main}` | Главная: слайды, галерея, подборки |
+ * | `/admin/auth` | `{@link module:routes/admin/auth}` | Логин админа, выдача токена |
+ *
+ * ## Админские сегменты (JWT)
+ *
+ * Перед роутером стоит `{@link module:middleware/tokenAdminController}` — нужен заголовок `Authorization: Bearer &lt;token&gt;`.
+ *
+ * | Mount | Модуль |
+ * |-------|--------|
+ * | `/admin/profile` | `{@link module:routes/admin/profile}` |
+ * | `/admin/applications` | `{@link module:routes/admin/applications}` |
+ * | `/admin/categories` | `{@link module:routes/admin/categories}` |
+ * | `/admin/projects` | `{@link module:routes/admin/projects}` |
+ * | `/admin/main` | `{@link module:routes/admin/main}` |
+ * | `/admin/gallery` | `{@link module:routes/admin/gallery}` |
+ *
+ * Дополнительно на этом роутере: `GET /test` → ответ `200` с телом `200` (проверка доступности API).
+ */
+
 const express = require('express');
 const router = express.Router();
 const tokenAdminController = require('../middleware/tokenAdminController');

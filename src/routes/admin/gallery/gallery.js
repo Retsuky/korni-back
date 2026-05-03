@@ -1,3 +1,22 @@
+/**
+ * Админская **галерея**: создание/чтение/обновление/удаление записей таблицы `gallery` и связанных файлов.
+ *
+ * @module routes/admin/gallery
+ *
+ * @description
+ *
+ * Префикс **`/api/v1/admin/gallery`**, JWT.
+ *
+ * URL картинок в БД: **`https://api.korni.pro/uploads/&lt;filename&gt;`**. Загрузка — **`upload.array('images', 50)`**.
+ *
+ * | Метод | Путь | Назначение |
+ * |-------|------|------------|
+ * | POST | `/create` | Поля формы: `title`, `category` (обяз.); опционально `description`, `stage`; файлы поля `images` |
+ * | GET | `/:id` | Одна запись (внимание: нет списка всех записей на уровне этого роутера) |
+ * | PUT | `/update/:id` | Обновление; передаются `existingImageUrls` (JSON строка массива) и новые файлы |
+ * | DELETE | `/delete/:id` | Удаление строки и попытка удалить файлы по имени из URL |
+ */
+
 const express = require('express');
 const router = express.Router();
 const { query } = require('../../../db/db');

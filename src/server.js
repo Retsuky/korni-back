@@ -1,3 +1,29 @@
+/**
+ * Точка входа процесса: создаёт приложение Express, подключает middleware и API.
+ *
+ * @module server
+ *
+ * @description
+ *
+ * ## Порт и запуск
+ *
+ * Прослушивание **`3020`** (константа `PORT`). В продакшене при использовании PM2 см. также `{@link module:ecosystem}`.
+ *
+ * ## Middleware и поведение
+ *
+ * - **JSON / urlencoded** с лимитом тела **50mb** — для загрузки тяжёлых данных с фронта.
+ * - Заголовки **CORS** (дублирующе с пакетом `cors`): разрешённые методы включают `PATCH` для админских приоритетов.
+ * - Пакет **cors** с `credentials: true` и `origin: true`.
+ * - Статическая раздача каталога **`/uploads`** → папка `uploads/` в корне репозитория (multer складывает файлы туда из админских роутов).
+ *
+ * ## Маршруты
+ *
+ * - `GET /test` — ответ `200` в теле JSON для быстрой проверки.
+ * - `GET /api/v1/*` — основное REST API, см. `{@link module:routes/index}`.
+ *
+ * Перед разработкой нужен настроенный `.env` (БД и секрет JWT для админки — см. `DEVELOPER.md`).
+ */
+
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');

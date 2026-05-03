@@ -1,3 +1,20 @@
+/**
+ * Приём **заявок (applications)** с публичного сайта без JWT.
+ *
+ * @module routes/contacts
+ *
+ * @description
+ *
+ * Префикс **`/api/v1/contacts`**. Body ожидается в виде **`{ data: { ... } }`**.
+ *
+ * | Метод | Путь | Body `data` | Таблица |
+ * |-------|------|-------------|---------|
+ * | POST | `/create` | `name`, `phone`, `email`, `text` | Вставка в `applications` |
+ * | POST | `/create-short` | `name`, `phone` | Укороченная заявка |
+ *
+ * Успех: **200** и сообщение об успешном создании. Ошибки — коды **400** и **500**. В коде есть опечатка `rows.legth` вместо `length`; при ошибке может вести себя неочевидно.
+ */
+
 const express = require('express');
 const router = express.Router();
 const { query } = require('../../db/db');

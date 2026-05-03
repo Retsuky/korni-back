@@ -1,3 +1,17 @@
+/**
+ * Просмотр **заявок**, оставленных через публичный модуль контактов.
+ *
+ * @module routes/admin/applications
+ *
+ * @description
+ *
+ * **`/api/v1/admin/applications`**, только с JWT.
+ *
+ * | Метод | Путь | Ответ |
+ * |-------|------|--------|
+ * | GET | `/` | Массив всех строк `applications` или **404** с сообщением, если пусто |
+ */
+
 const express = require('express');
 const router = express.Router();
 const { query } = require('../../../db/db');

@@ -1,0 +1,16 @@
+{
+  "source": {
+    "include": ["./src", "./ecosystem.config.js"],
+    "includePattern": ".+\\.js$",
+    "excludePattern": "(node_modules/|docs/)"
+  },
+  "opts": {
+    "destination": "./docs/jsdoc",
+    "recurse": true,
+    "readme": "./DEVELOPER.md"
+  },
+  "plugins": ["plugins/markdown"],
+  "tags": {
+    "allowUnknownTags": true
+  }
+}

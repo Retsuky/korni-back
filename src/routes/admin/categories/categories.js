@@ -1,3 +1,52 @@
+/**
+ * Управление админскими справочниками: **теги (categories)**, **типы (types)** и **этапы (stages)** — порядок через поле `priority`, с поддержкой обмена приоритетами между записями.
+ *
+ * @module routes/admin/categories
+ *
+ * @description
+ *
+ * ## Базовый URL
+ *
+ * Все пути ниже задаются **относительно** монтирования роутера в `{@link module:routes/index}`:
+ * фактический префикс **`/api/v1/admin/categories`**.
+ *
+ * ## Авторизация
+ *
+ * Требуется заголовок `Authorization: Bearer &lt;JWT&gt;`. Исключений нет — см. `tokenAdminController` в корневом роутере.
+ *
+ * ## Данные и таблицы
+ *
+ * - **categories** — теги/категории проектов (`name_ru`, `name_en`, `priority`).
+ * - **types** — типы объектов, расширенное описание (`title`, `description`).
+ * - **stages** — этапы строительства (`name_ru`, `name_en`).
+ *
+ * При создании записей `priority` назначается автоматически как `MAX(priority)+1`.
+ *
+ * Эндпоинты `PATCH .../priority` меняют порядок: если новый приоритет уже занят, выполняется **обмен** приоритетами с конфликтующей записью.
+ *
+ * ## Маршруты (каталог)
+ *
+ * | Метод | Путь (suffix) | Назначение |
+ * |-------|----------------|------------|
+ * | GET | `/tags` | Список тегов, сортировка по `priority` ASC |
+ * | POST | `/tags/create` | Создание тега; body: `name_ru`, `name_en` |
+ * | PUT | `/tags/edit` | Редактирование; body: `id`, `name_ru`, `name_en` |
+ * | DELETE | `/tags/:id` | Удаление тега |
+ * | PATCH | `/tags/:id/priority` | Смена приоритета; body: `priority` (положительное число) |
+ * | GET | `/types` | Список типов по `priority` |
+ * | POST | `/types/create` | Создание типа; body: `name_ru`, `name_en`, `title`, `description` |
+ * | PUT | `/types/edit` | Редактирование типа |
+ * | DELETE | `/types/:id` | Удаление типа |
+ * | PATCH | `/types/:id/priority` | Смена приоритета типа |
+ * | GET | `/stages` | Список этапов |
+ * | POST | `/stages/create` | Создание этапа |
+ * | PUT | `/stages/edit` | Редактирование этапа |
+ * | DELETE | `/stages/:id` | Удаление этапа |
+ * | PATCH | `/stages/:id/priority` | Смена приоритета этапа |
+ *
+ * Типичные коды ответов: **200** — успех; **400** — невалидный `priority`; **404** — сущность не найдена; **500** — ошибка БД или сервера.
+ */
+
 const express = require('express');
 const router = express.Router();
 const { query } = require('../../../db/db');

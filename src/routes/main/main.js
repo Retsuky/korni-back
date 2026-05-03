@@ -1,3 +1,24 @@
+/**
+ * Публичные данные для **главной страницы** и блоков карточек/подбора проектов.
+ *
+ * @module routes/main
+ *
+ * @description
+ *
+ * Префикс **`/api/v1/main`**.
+ *
+ * | Метод | Путь | Назначение |
+ * |-------|------|------------|
+ * | GET | `/` | Слайды из таблицы `slides` |
+ * | GET | `/galleries` | Записи галереи `gallery` |
+ * | GET | `/tags` | Совмещённо: все `categories` и все `stages` в одном JSON `{ tags, stages }` |
+ * | GET | `/popular` | Проекты с `popular = TRUE`, сортировка `id DESC` |
+ * | GET | `/same-projects/:style/:square/:id` | Похожие по стилю и площади (±100), иначе fallback на популярные без текущего `id` |
+ * | GET | `/header` | Данные для шапки: отсортированные теги/этапы/типы → структуры `builderHouse` и `projectTypes` |
+ *
+ * Часть обработчиков при пустых выборках не отправляет ответ в `catch` (только лог); предпочтительнее унифицировать это при доработке.
+ */
+
 const express = require('express');
 const router = express.Router();
 const { query } = require('../../db/db');
