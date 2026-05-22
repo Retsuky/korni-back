@@ -21,6 +21,30 @@ npm start      # node src/server.js
 |------------|------------|
 | `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT` | PostgreSQL (`src/db/db.js`) |
 | `JWT_SECRET_ADMIN` | Подпись токена администратора (`src/middleware/tokenAdminController.js`, `src/routes/admin/auth/auth.js`) |
+| `INIT_ADMIN_LOGIN`, `INIT_ADMIN_PASSWORD` | (опционально) для скрипта `db:init`: первый вход в админку, если таблица `admins` пустая |
+
+## Инициализация БД
+
+Создать таблицы и минимальные записи в справочниках (чтобы работал `/api/v1/main/header`) и одного администратора:
+
+```bash
+# из korni-back
+pnpm run db:init
+
+# или из корня монорепозитория
+pnpm run db:init
+```
+
+Нужен заполненный `.env` с параметрами `DB_*` (см. выше).  
+По умолчанию создаётся пользователь **admin / admin**, пока не заданы `INIT_ADMIN_LOGIN` и `INIT_ADMIN_PASSWORD`. Повторный запуск безопасен: `CREATE TABLE IF NOT EXISTS`, админ не дублируется (`ON CONFLICT`).
+
+## Демо-данные (мок)
+
+Очистить контентные таблицы и залить слайды, проекты, галерею «построенные дома», справочники и тестовые заявки (админы **не** удаляются):
+
+```bash
+pnpm run db:seed
+```
 
 ## Маршрутизация
 

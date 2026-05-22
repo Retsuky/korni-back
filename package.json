@@ -5,6 +5,10 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "db:init": "node scripts/init-db.js",
+    "db:migrate": "node scripts/migrate-matrix.js",
+    "db:seed": "node scripts/seed-mock.js",
+    "test": "jest",
     "docs": "jsdoc -c jsdoc.conf.json",
     "docs:preview": "npx --yes serve docs/jsdoc -l 4173"
   },
@@ -28,7 +32,9 @@
     "pg": "^8.16.0"
   },
   "devDependencies": {
+    "jest": "^30.4.2",
     "jsdoc": "^4.0.5",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.1"
   }
 }

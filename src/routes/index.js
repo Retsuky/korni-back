@@ -48,10 +48,17 @@ const adminCategoriesRoute = require('./admin/categories/categories');
 const adminProjectsRoute = require('./admin/projects/projects');
 const adminMainRoute = require('./admin/main/main');
 const adminGalleryRoute = require('./admin/gallery/gallery');
+const userAuthRoute = require('./auth/userAuth');
+const userAccountRoute = require('./user/account');
+const paymentsRoute = require('./payments/payments');
+const tokenUser = require('../middleware/tokenUser');
 
 router.use('/projects', projectsRoute);
 router.use('/contacts', contactsRoute);
 router.use('/main', mainRoute);
+router.use('/payments', paymentsRoute);
+router.use('/auth/user', userAuthRoute);
+router.use('/user', tokenUser, userAccountRoute);
 
 router.use('/admin/auth', adminAuthRoute);
 router.use('/admin/profile', tokenAdminController, adminProfileRoute);

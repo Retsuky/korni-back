@@ -1,58 +1,160 @@
 /**
+
  * Приём **заявок (applications)** с публичного сайта без JWT.
+
  *
+
  * @module routes/contacts
+
  *
- * @description
- *
+
  * Префикс **`/api/v1/contacts`**. Body ожидается в виде **`{ data: { ... } }`**.
+
  *
- * | Метод | Путь | Body `data` | Таблица |
- * |-------|------|-------------|---------|
- * | POST | `/create` | `name`, `phone`, `email`, `text` | Вставка в `applications` |
- * | POST | `/create-short` | `name`, `phone` | Укороченная заявка |
+
+ * | Метод | Путь | Body `data` |
+
+ * |-------|------|-------------|
+
+ * | POST | `/create` | `name`, `phone`, `email`, `text`, опционально `config`, `estimated_total` |
+
+ * | POST | `/create-short` | `name`, `phone` |
+
  *
- * Успех: **200** и сообщение об успешном создании. Ошибки — коды **400** и **500**. В коде есть опечатка `rows.legth` вместо `length`; при ошибке может вести себя неочевидно.
+
+ * Если передан валидный JWT пользователя (`Authorization: Bearer`), заявка привязывается к `user_id`.
+
  */
 
+
+
 const express = require('express');
+
 const router = express.Router();
+
 const { query } = require('../../db/db');
 
-router.post('/create', async (req, res) => {
+const optionalUser = require('../../middleware/optionalUser');
+
+
+
+router.post('/create', optionalUser, async (req, res) => {
+
     const { data } = req.body;
 
+    const userId = req.user?.id ?? null;
+
+    const configJson = data?.config != null ? data.config : null;
+
+    const estimatedTotal =
+
+        data?.estimated_total != null && data.estimated_total !== ''
+
+            ? Number(data.estimated_total)
+
+            : null;
+
+
+
     try {
+
         const newApplication = await query(
-            'INSERT INTO applications (name, phone, email, text) VALUES ($1,$2,$3,$4) RETURNING *',
-            [data.name, data.phone, data.email, data.text]
+
+            `INSERT INTO applications (name, phone, email, text, user_id, config_json, estimated_total)
+
+             VALUES ($1,$2,$3,$4,$5,$6,$7)
+
+             RETURNING *`,
+
+            [
+
+                data.name,
+
+                data.phone,
+
+                data.email,
+
+                data.text,
+
+                userId,
+
+                configJson,
+
+                Number.isNaN(estimatedTotal) ? null : estimatedTotal,
+
+            ]
+
         );
 
-        if (newApplication.rows.legth === 0) return res.status(400).json({ msg: "Произошла ошибка при создании" });
 
-        res.status(200).json({ msg: "Application create" });
+
+        if (newApplication.rows.length === 0) {
+
+            return res.status(400).json({ msg: 'Произошла ошибка при создании' });
+
+        }
+
+
+
+        res.status(200).json({ msg: 'Application create' });
+
     } catch (error) {
+
         console.log(error);
+
         res.status(500).json(error);
+
     }
+
 });
 
-router.post('/create-short', async (req, res) => {
+
+
+router.post('/create-short', optionalUser, async (req, res) => {
+
     const { data } = req.body;
 
+    const userId = req.user?.id ?? null;
+
+
+
     try {
+
         const newApplication = await query(
-            'INSERT INTO applications (name, phone) VALUES ($1,$2) RETURNING *',
-            [data.name, data.phone]
+
+            `INSERT INTO applications (name, phone, user_id)
+
+             VALUES ($1,$2,$3)
+
+             RETURNING *`,
+
+            [data.name, data.phone, userId]
+
         );
 
-        if (newApplication.rows.legth === 0) return res.status(400).json({ msg: "Произошла ошибка при создании" });
 
-        res.status(200).json({ msg: "Application create" });
+
+        if (newApplication.rows.length === 0) {
+
+            return res.status(400).json({ msg: 'Произошла ошибка при создании' });
+
+        }
+
+
+
+        res.status(200).json({ msg: 'Application create' });
+
     } catch (error) {
+
         console.log(error);
+
         res.status(500).json(error);
+
     }
+
 });
+
+
 
 module.exports = router;
+
