@@ -48,6 +48,9 @@ const adminCategoriesRoute = require('./admin/categories/categories');
 const adminProjectsRoute = require('./admin/projects/projects');
 const adminMainRoute = require('./admin/main/main');
 const adminGalleryRoute = require('./admin/gallery/gallery');
+const adminUsersRoute = require('./admin/users/users');
+const adminPhotoReportsRoute = require('./admin/photoReports/photoReports');
+const adminApplicationMessagesRoute = require('./admin/applicationMessages/applicationMessages');
 const userAuthRoute = require('./auth/userAuth');
 const userAccountRoute = require('./user/account');
 const paymentsRoute = require('./payments/payments');
@@ -63,10 +66,21 @@ router.use('/user', tokenUser, userAccountRoute);
 router.use('/admin/auth', adminAuthRoute);
 router.use('/admin/profile', tokenAdminController, adminProfileRoute);
 router.use('/admin/applications', tokenAdminController, adminApplicationsRoute);
+router.use(
+    '/admin/applications/:applicationId/photo-reports',
+    tokenAdminController,
+    adminPhotoReportsRoute
+);
+router.use(
+    '/admin/applications/:applicationId/messages',
+    tokenAdminController,
+    adminApplicationMessagesRoute
+);
 router.use('/admin/categories', tokenAdminController, adminCategoriesRoute);
 router.use('/admin/projects', tokenAdminController, adminProjectsRoute);
 router.use('/admin/main', tokenAdminController, adminMainRoute);
 router.use('/admin/gallery', tokenAdminController, adminGalleryRoute);
+router.use('/admin/users', tokenAdminController, adminUsersRoute);
 
 router.get('/test', async (req, res) => {
     res.status(200).json(200);

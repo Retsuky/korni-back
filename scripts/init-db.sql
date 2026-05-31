@@ -89,3 +89,28 @@ CREATE TABLE IF NOT EXISTS applications (
     config_json JSONB,
     estimated_total NUMERIC
 );
+
+CREATE TABLE IF NOT EXISTS application_photo_reports (
+    id SERIAL PRIMARY KEY,
+    application_id INTEGER NOT NULL REFERENCES applications (id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users (id) ON DELETE SET NULL,
+    stage VARCHAR(120) NOT NULL DEFAULT 'Этап работ',
+    comment TEXT,
+    images TEXT[] NOT NULL DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_photo_reports_application ON application_photo_reports (application_id);
+CREATE INDEX IF NOT EXISTS idx_photo_reports_user ON application_photo_reports (user_id);
+
+CREATE TABLE IF NOT EXISTS application_messages (
+    id SERIAL PRIMARY KEY,
+    application_id INTEGER NOT NULL REFERENCES applications (id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users (id) ON DELETE SET NULL,
+    sender_role VARCHAR(20) NOT NULL CHECK (sender_role IN ('manager', 'client')),
+    body TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_app_messages_application ON application_messages (application_id);
+CREATE INDEX IF NOT EXISTS idx_app_messages_user ON application_messages (user_id);
